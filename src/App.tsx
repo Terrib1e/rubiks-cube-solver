@@ -28,7 +28,7 @@ const AppContent: React.FC = () => {
     redo
   } = useCube(3);
 
-  const [currentSolution, setCurrentSolution] = useState<Solution | null>(null);
+  const [, setCurrentSolution] = useState<Solution | null>(null);
 
   const handleToggleTimer = () => {
     if (timer.isRunning) {

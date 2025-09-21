@@ -1,7 +1,6 @@
 import { useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
-import { KEYBOARD_SHORTCUTS } from '../utils/constants';
 
 interface UseKeyboardProps {
   onMove: (notation: string) => void;

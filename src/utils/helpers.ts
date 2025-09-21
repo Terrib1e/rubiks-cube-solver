@@ -1,5 +1,5 @@
 import { Vector3, Quaternion } from 'three';
-import { Face, Direction, Move } from '../types/cube.types';
+import { Face, Direction } from '../types/cube.types';
 
 export function parseMove(notation: string): { face: Face; direction: Direction; times: number } {
   const match = notation.match(/^([FBLRUD])(['2]?)$/);
@@ -48,11 +48,14 @@ export function generateScramble(length: number = 25): string[] {
     'R': 'L', 'L': 'R'
   };
 
-  for (let i = 0; i < length; i++) {
-    let availableFaces = faces.filter(face => {
-      return face !== lastFace && face !== lastOppositeFace;
+  const getAvailableFaces = (prevFace: Face | null, prevOppositeFace: Face | null) => {
+    return faces.filter(face => {
+      return face !== prevFace && face !== prevOppositeFace;
     });
+  };
 
+  for (let i = 0; i < length; i++) {
+    const availableFaces = getAvailableFaces(lastFace, lastOppositeFace);
     const face = availableFaces[Math.floor(Math.random() * availableFaces.length)];
     const modifier = modifiers[Math.floor(Math.random() * modifiers.length)];
 
@@ -164,7 +167,7 @@ export function lerp(start: number, end: number, factor: number): number {
 export function uuid(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
     const r = Math.random() * 16 | 0;
-    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    const v = c === 'x' ? r : ((r & 0x3) | 0x8);
     return v.toString(16);
   });
 }

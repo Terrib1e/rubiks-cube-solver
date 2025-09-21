@@ -36,62 +36,66 @@ const Piece: React.FC<PieceProps> = ({
   });
 
   const getStickerData = () => {
-    const stickers = [];
+    interface StickerData {
+      color: string;
+      position: Vector3;
+      rotation: [number, number, number];
+    }
+
+    const stickers: StickerData[] = [];
     const offset = size / 2 + 0.01; // Slight offset to prevent z-fighting
 
-    // Front face
-    if (piece.colors.front) {
-      stickers.push({
-        color: piece.colors.front,
-        position: new Vector3(0, 0, offset),
-        rotation: [0, 0, 0] as [number, number, number]
-      });
-    }
+    // Only show stickers for faces that have colors
+    const colorEntries = Object.entries(piece.colors || {});
 
-    // Back face
-    if (piece.colors.back) {
-      stickers.push({
-        color: piece.colors.back,
-        position: new Vector3(0, 0, -offset),
-        rotation: [0, Math.PI, 0] as [number, number, number]
-      });
-    }
+    colorEntries.forEach(([faceKey, color]) => {
+      if (!color) return;
 
-    // Up face
-    if (piece.colors.up) {
-      stickers.push({
-        color: piece.colors.up,
-        position: new Vector3(0, offset, 0),
-        rotation: [-Math.PI / 2, 0, 0] as [number, number, number]
-      });
-    }
-
-    // Down face
-    if (piece.colors.down) {
-      stickers.push({
-        color: piece.colors.down,
-        position: new Vector3(0, -offset, 0),
-        rotation: [Math.PI / 2, 0, 0] as [number, number, number]
-      });
-    }
-
-    // Right face
-    if (piece.colors.right) {
-      stickers.push({
-        color: piece.colors.right,
-        position: new Vector3(offset, 0, 0),
-        rotation: [0, Math.PI / 2, 0] as [number, number, number]
-      });
-    }
-
-    // Left face
-    if (piece.colors.left) {
-      stickers.push({
-        color: piece.colors.left,
-        position: new Vector3(-offset, 0, 0),
-        rotation: [0, -Math.PI / 2, 0] as [number, number, number]
-      });
-    }
+      switch (faceKey) {
+        case 'front':
+          stickers.push({
+            color,
+            position: new Vector3(0, 0, offset),
+            rotation: [0, 0, 0]
+          });
+          break;
+        case 'back':
+          stickers.push({
+            color,
+            position: new Vector3(0, 0, -offset),
+            rotation: [0, Math.PI, 0]
+          });
+          break;
+        case 'up':
+          stickers.push({
+            color,
+            position: new Vector3(0, offset, 0),
+            rotation: [-Math.PI / 2, 0, 0]
+          });
+          break;
+        case 'down':
+          stickers.push({
+            color,
+            position: new Vector3(0, -offset, 0),
+            rotation: [Math.PI / 2, 0, 0]
+          });
+          break;
+        case 'right':
+          stickers.push({
+            color,
+            position: new Vector3(offset, 0, 0),
+            rotation: [0, Math.PI / 2, 0]
+          });
+          break;
+        case 'left':
+          stickers.push({
+            color,
+            position: new Vector3(-offset, 0, 0),
+            rotation: [0, -Math.PI / 2, 0]
+          });
+          break;
+      }
+    });
 
     return stickers;
   };

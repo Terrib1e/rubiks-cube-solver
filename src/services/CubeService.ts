@@ -139,29 +139,61 @@ export class CubeService {
   private updatePieceColors(piece: Piece, face: Face, direction: Direction): void {
     if (piece.type === 'center') return; // Centers don't change colors
 
-    const colors = { ...piece.colors };
+    // Create a new colors object instead of modifying the existing one
+    const newColors = { ...piece.colors };
 
     // Rotate colors around the face
     switch (face) {
       case 'F':
         if (direction === 'CW') {
-          const temp = colors.up;
-          colors.up = colors.left;
-          colors.left = colors.down;
-          colors.down = colors.right;
-          colors.right = temp;
+          const temp = newColors.up;
+          newColors.up = newColors.left;
+          newColors.left = newColors.down;
+          newColors.down = newColors.right;
+          newColors.right = temp;
         } else {
-          const temp = colors.up;
-          colors.up = colors.right;
-          colors.right = colors.down;
-          colors.down = colors.left;
-          colors.left = temp;
+          const temp = newColors.up;
+          newColors.up = newColors.right;
+          newColors.right = newColors.down;
+          newColors.down = newColors.left;
+          newColors.left = temp;
         }
         break;
-      // Add other face rotations...
+      case 'R':
+        if (direction === 'CW') {
+          const temp = newColors.up;
+          newColors.up = newColors.front;
+          newColors.front = newColors.down;
+          newColors.down = newColors.back;
+          newColors.back = temp;
+        } else {
+          const temp = newColors.up;
+          newColors.up = newColors.back;
+          newColors.back = newColors.down;
+          newColors.down = newColors.front;
+          newColors.front = temp;
+        }
+        break;
+      case 'U':
+        if (direction === 'CW') {
+          const temp = newColors.front;
+          newColors.front = newColors.right;
+          newColors.right = newColors.back;
+          newColors.back = newColors.left;
+          newColors.left = temp;
+        } else {
+          const temp = newColors.front;
+          newColors.front = newColors.left;
+          newColors.left = newColors.back;
+          newColors.back = newColors.right;
+          newColors.right = temp;
+        }
+        break;
+      // Add other faces as needed
     }
 
-    piece.colors = colors;
+    // Replace the entire colors object
+    Object.assign(piece, { colors: newColors });
   }
 
   private getAffectedPieces(face: Face): string[] {

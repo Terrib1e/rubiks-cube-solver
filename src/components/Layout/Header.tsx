@@ -5,7 +5,7 @@ import { setActivePanel, toggleSidebar, setTheme } from '../../store/uiSlice';
 
 const Header: React.FC = () => {
   const dispatch = useDispatch();
-  const { activePanel, theme, sidebarOpen } = useSelector((state: RootState) => state.ui);
+  const { activePanel, theme } = useSelector((state: RootState) => state.ui);
   const cubeState = useSelector((state: RootState) => state.cube.current);
 
   const panels = [

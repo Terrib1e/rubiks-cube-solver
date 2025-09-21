@@ -1,4 +1,4 @@
-import { CubeState, Face } from '../types/cube.types';
+import { CubeState } from '../types/cube.types';
 import { Solution, SolveMethod, SolutionPhase } from '../types/solver.types';
 import { OLL_ALGORITHMS, PLL_ALGORITHMS } from '../utils/constants';
 

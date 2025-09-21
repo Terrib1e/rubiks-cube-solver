@@ -1,7 +1,7 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
-import { Group, Vector3 } from 'three';
+import { Group } from 'three';
 import { CubeService } from '../../services/CubeService';
 import { CubeState } from '../../types/cube.types';
 import Piece from './Piece';
@@ -18,12 +18,12 @@ const CubeScene: React.FC<{ cubeService: CubeService; onStateChange?: (state: Cu
   const groupRef = useRef<Group>(null);
   const [cubeState, setCubeState] = useState<CubeState>(cubeService.getState());
 
+  // Force re-render when cube state changes
   useFrame(() => {
     const newState = cubeService.getState();
-    if (newState !== cubeState) {
-      setCubeState(newState);
-      onStateChange?.(newState);
-    }
+    // Always update to ensure reactivity
+    setCubeState(newState);
+    onStateChange?.(newState);
   });
 
   return (
@@ -36,16 +36,19 @@ const CubeScene: React.FC<{ cubeService: CubeService; onStateChange?: (state: Cu
         position={[10, 10, 10]}
         intensity={0.8}
         castShadow
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
+        shadow-mapSize-width={1024}
+        shadow-mapSize-height={1024}
       />
+
+      {/* Point light for better illumination */}
+      <pointLight position={[5, 5, 5]} intensity={0.5} />
 
       {/* Cube pieces */}
       {cubeState.pieces.map((piece) => (
         <Piece
           key={piece.id}
           piece={piece}
-          size={0.98} // Slightly smaller to show gaps between pieces
+          size={0.95} // Slightly smaller to show gaps between pieces
         />
       ))}
 
@@ -75,9 +78,15 @@ const Cube: React.FC<CubeProps> = ({ size = 3, onStateChange }) => {
           enablePan={true}
           enableZoom={true}
           enableRotate={true}
-          minDistance={3}
-          maxDistance={15}
+          minDistance={4}
+          maxDistance={20}
           maxPolarAngle={Math.PI}
+          minPolarAngle={0}
+          enableDamping={true}
+          dampingFactor={0.05}
+          rotateSpeed={0.5}
+          zoomSpeed={0.8}
+          panSpeed={0.8}
         />
 
         <CubeScene cubeService={cubeService} onStateChange={onStateChange} />

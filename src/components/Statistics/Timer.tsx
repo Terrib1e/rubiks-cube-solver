@@ -51,26 +51,26 @@ const Timer: React.FC<TimerProps> = ({ onSolveComplete }) => {
     }
   }, [cubeState?.isSolved, timer.isRunning, timer.currentTime, dispatch, onSolveComplete]);
 
-  const handleSpaceBar = (event: KeyboardEvent) => {
-    if (event.code === 'Space') {
-      event.preventDefault();
-
-      if (timer.isRunning) {
-        dispatch(stopTimer());
-      } else if (timer.isInspecting) {
-        dispatch(stopInspection());
-        dispatch(startTimer());
-      } else {
-        dispatch(resetTimer());
-        dispatch(startInspection());
-      }
-    }
-  };
-
   useEffect(() => {
+    const handleSpaceBar = (event: KeyboardEvent) => {
+      if (event.code === 'Space') {
+        event.preventDefault();
+
+        if (timer.isRunning) {
+          dispatch(stopTimer());
+        } else if (timer.isInspecting) {
+          dispatch(stopInspection());
+          dispatch(startTimer());
+        } else {
+          dispatch(resetTimer());
+          dispatch(startInspection());
+        }
+      }
+    };
+
     window.addEventListener('keydown', handleSpaceBar);
     return () => window.removeEventListener('keydown', handleSpaceBar);
-  }, [timer.isRunning, timer.isInspecting]);
+  }, [timer.isRunning, timer.isInspecting, dispatch]);
 
   const handleTimerClick = () => {
     if (timer.isRunning) {
